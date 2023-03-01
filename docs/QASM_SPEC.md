@@ -1,0 +1,28 @@
+# Instructions
+
+- `ADD <register> <register>`
+- `SUBTRACT <register> <register>`
+- `MULTIPLY <register> <register>`
+- `DIVIDE <register> <register>`
+- `MODULO <register> <register>`
+- `POWER <register> <register>`
+- `BIN_ADD <register> <register>`
+- `BIN_SUBTRACT <register> <register>`
+- `GREATER <register> <register>`
+- `GREATER_EQUAL <register> <register>`
+- `EQUAL <register> <register>`
+- `LESS_EQUAL <register> <register>`
+- `LESS <register> <register>`
+- `INPUT <register>`
+- `OUTPUT <register>`
+- `BRANCH_POSITIVE <register> <label>`
+- `BRANCH_NOT_POSITIVE <register> <label>`
+- `BRANCH_ZERO <register> <label>`
+- `BRANCH_NOT_ZERO <register> <label>`
+- `BRANCH_NEGATIVE <register> <label>`
+- `BRANCH_NOT_NEGATIVE <register> <label>`
+- `GOTO <label>`
+- `STOP`
+- `.LITERAL <name> <data>`
+- `.RESERVE <name> <count>`
+- `.LABEL <name>`
