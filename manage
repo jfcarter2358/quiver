@@ -1,0 +1,40 @@
+#! /usr/bin/env bash
+
+cmd="$1"
+shift
+
+usage="$(cat << EOM
+usage: manage.sh command args...
+
+Manage the quiver project
+
+commands:
+    assemble     Assemble a qasm file into qvc bytecode
+    build        Build the Quiver assembler, parser, and VM
+    run          Run the Quiver VM against a qvc bytecode file
+
+options:
+    -h|--help    Show this help message and exit
+EOM
+)"
+
+case "${cmd}" in
+    assemble)
+        ./scripts/assemble.sh $@
+        ;;
+    build)
+        ./scripts/build.sh $@
+        ;;
+    run)
+        ./scripts/run.sh $@
+        ;;
+    -h|--help)
+        echo "${usage}"
+        exit 0
+        ;;
+    *)
+        echo "Invalid command: ${cmd}"
+        echo "${usage}"
+        exit 1
+        ;;
+esac

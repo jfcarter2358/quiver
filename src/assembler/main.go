@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"encoding/binary"
 )
 
 func getParts(line string) []string {
@@ -88,27 +89,53 @@ func firstPass(lines []string) ([]byte, []string, error) {
 	return blockData, names, nil
 }
 
-func main() {
-	args := os.Args[1:]
-
+func readFile(path string) ([]string, error) {
 	lines := []string{}
 
-	file, err := os.Open(args[0])
+	file, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	scanner := bufio.NewScanner(file)
+	defer file.Close()
 
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
 
 	if err := scanner.Err(); err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	file.Close()
+	return lines, nil
+}
+
+func writeFile(path string, data []byte) error {
+	outFile, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	for _, datum := range data {
+		err := binary.Write(outFile, binary.BigEndian, datum)
+		if err != nil {
+			return err
+		}
+	}
+	outFile.Close()
+	return nil
+}
+
+func main() {
+	args := os.Args[1:]
+	parts := strings.Split(args[0], ".")
+	fileName := strings.Join(parts[:len(parts)-1], ".")
+	fileExtension := parts[len(parts)-1]
+
+	lines, err := readFile(fmt.Sprintf("%s.%s", fileName, fileExtension))
+	if err != nil {
+		panic(err)
+	}
 
 	data, names, err := firstPass(lines)
 
@@ -116,8 +143,16 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(names)
-	fmt.Println(data)
-	fmt.Println(len(data))
+	dataLength := len(data)
+	byteData := append(utils.IntToByteArray(dataLength, 8), data...)
 
+	fmt.Println(byteData)
+	fmt.Println(data)
+	fmt.Println(names)
+
+	err = writeFile(fmt.Sprintf("%s.qvc", fileName), byteData)
+	if err != nil {
+		panic(err)
+	}
+	// writeFile(args)
 }
