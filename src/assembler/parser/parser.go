@@ -77,14 +77,77 @@ func SecondPass(lines []string) ([]byte, error) {
 
 		switch strings.ToUpper(code) {
 		case enums.OP_CODE_NAME_ADD:
-			dotData := opcodes.ProcessAdd(parts)
-			blockData = append(blockData, dotData...)
+			opData := opcodes.ProcessAdd(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_SUBTRACT:
+			opData := opcodes.ProcessSubtract(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_MULTIPLY:
+			opData := opcodes.ProcessMultiply(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_DIVIDE:
+			opData := opcodes.ProcessDivide(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_MODULO:
+			opData := opcodes.ProcessModulo(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_POWER:
+			opData := opcodes.ProcessPower(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BINARY_ADD:
+			opData := opcodes.ProcessBinaryAdd(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BINARY_SUBTRACT:
+			opData := opcodes.ProcessBinarySubtract(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_GREATER:
+			opData := opcodes.ProcessGreater(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_GREATER_EQUAL:
+			opData := opcodes.ProcessGreaterEqual(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_EQUAL:
+			opData := opcodes.ProcessEqual(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_LESS_EQUAL:
+			opData := opcodes.ProcessLessEqual(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_LESS:
+			opData := opcodes.ProcessLess(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_INPUT_BLOCK:
+			opData := opcodes.ProcessInputBlock(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_INPUT_NON_BLOCK:
+			opData := opcodes.ProcessInputNonBlock(parts)
+			blockData = append(blockData, opData...)
 		case enums.OP_CODE_NAME_OUTPUT:
-			dotData := opcodes.ProcessOutput(parts)
-			blockData = append(blockData, dotData...)
+			opData := opcodes.ProcessOutput(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_POSITIVE:
+			opData := opcodes.ProcessBranchPositive(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_NOT_POSITIVE:
+			opData := opcodes.ProcessBranchNotPositive(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_ZERO:
+			opData := opcodes.ProcessBranchZero(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_NOT_ZERO:
+			opData := opcodes.ProcessBranchNotZero(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_NEGATIVE:
+			opData := opcodes.ProcessBranchNegative(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_BRANCH_NOT_NEGATIVE:
+			opData := opcodes.ProcessBranchNotNegative(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_GOTO:
+			opData := opcodes.ProcessGoto(parts)
+			blockData = append(blockData, opData...)
 		case enums.OP_CODE_NAME_STOP:
-			dotData := opcodes.ProcessStop(parts)
-			blockData = append(blockData, dotData...)
+			opData := opcodes.ProcessStop(parts)
+			blockData = append(blockData, opData...)
 		default:
 			programCounter += 1
 		}

@@ -21,6 +21,7 @@ func Init() {
 }
 
 func PrintState() {
+	fmt.Println()
 	fmt.Printf("Label data: %v\n", LabelData)
 	fmt.Printf("Bool data: %v\n", BoolData)
 	fmt.Printf("Int data: %v\n", IntData)

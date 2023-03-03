@@ -26,7 +26,11 @@ func main() {
 
 	// memstore.PrintState()
 
-	err = runner.Run(byteCode)
+	instructions := parser.ParseInstructions(byteCode)
+
+	// fmt.Printf("%v\n", instructions)
+
+	err = runner.Run(instructions)
 	if err != nil {
 		panic(err)
 	}
