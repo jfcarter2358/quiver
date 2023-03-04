@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"assembler/enums"
-	"assembler/utils"
+	"quiver/assembler/utils"
+	"quiver/enums"
 )
 
 func process1(opCode byte, parts []string) []byte {

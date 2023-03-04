@@ -3,10 +3,10 @@ package utils
 import (
 	"bytes"
 	"encoding/binary"
+	"quiver/enums"
+	"quiver/vm/memstore"
 	"strconv"
 	"strings"
-	"vm/enums"
-	"vm/memstore"
 )
 
 func CoerceByteInt(data []byte) int {

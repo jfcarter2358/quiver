@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"vm/enums"
-	"vm/memstore"
-	"vm/utils"
+	"quiver/enums"
+	"quiver/vm/memstore"
+	"quiver/vm/utils"
 )
 
 type Instruction struct {

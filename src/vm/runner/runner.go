@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"quiver/enums"
+	"quiver/vm/memstore"
+	"quiver/vm/parser"
+	"quiver/vm/utils"
 	"strings"
-	"vm/enums"
-	"vm/memstore"
-	"vm/parser"
-	"vm/utils"
 )
 
 func Run(instructions []parser.Instruction) error {

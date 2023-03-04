@@ -1,17 +1,15 @@
-package main
+package vm
 
 import (
-	"os"
-	"vm/fileio"
-	"vm/memstore"
-	"vm/parser"
-	"vm/runner"
+	"quiver/vm/fileio"
+	"quiver/vm/memstore"
+	"quiver/vm/parser"
+	"quiver/vm/runner"
 )
 
-func main() {
-	args := os.Args[1:]
+func Run(path string) {
 
-	byteCode, err := fileio.ReadQVC(args[0])
+	byteCode, err := fileio.ReadQVC(path)
 
 	if err != nil {
 		panic(err)

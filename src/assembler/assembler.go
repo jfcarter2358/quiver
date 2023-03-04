@@ -1,17 +1,16 @@
-package main
+package assembler
 
 import (
-	"assembler/fileio"
-	"assembler/parser"
-	"assembler/utils"
 	"fmt"
-	"os"
+	"quiver/assembler/fileio"
+	"quiver/assembler/parser"
+	"quiver/assembler/utils"
 	"strings"
 )
 
-func main() {
-	args := os.Args[1:]
-	parts := strings.Split(args[0], ".")
+func Assemble(filePath string) {
+	// args := os.Args[1:]
+	parts := strings.Split(filePath, ".")
 	fileName := strings.Join(parts[:len(parts)-1], ".")
 	fileExtension := parts[len(parts)-1]
 
