@@ -30,12 +30,12 @@
       [op code][source length 1][source 1][source length 2][source 2][dest length][dest]
       [ 1     ][ 1             ][ ?      ][ 1             ][ ?      ][ 1         ][ ?  ]
       ```
-- `BINARY_ADD <source> <source> <dest source>`
+- `BINARY_ADD <source> <source> <dest source>` **NOT IMPLEMENTED**
     - ```
       [op code][source length 1][source 1][source length 2][source 2][dest length][dest]
       [ 1     ][ 1             ][ ?      ][ 1             ][ ?      ][ 1         ][ ?  ]
       ```
-- `BINARY_SUBTRACT <source> <source> <dest source>`
+- `BINARY_SUBTRACT <source> <source> <dest source>` **NOT IMPLEMENTED**
     - ```
       [op code][source length 1][source 1][source length 2][source 2][dest length][dest]
       [ 1     ][ 1             ][ ?      ][ 1             ][ ?      ][ 1         ][ ?  ]
@@ -70,7 +70,7 @@
       [op code][dest length][dest]
       [ 1     ][ 1         ][ ?  ]
       ```
-- `INPUT_NON_BLOCK <dest_ascii> <dest_keycode>`
+- `INPUT_NON_BLOCK <dest_ascii> <dest_keycode>` **NOT IMPLEMENTED**
     - ```
       [op code][dest_ascii length][dest_ascii][dest_keycode length][dest_keycode]
       [ 1     ][ 1               ][ ?        ][ 1                 ][ ?          ]
@@ -80,18 +80,49 @@
       [ 1     ][ 1           ][ ?    ]
       ```
 - `BRANCH_POSITIVE <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `BRANCH_NOT_POSITIVE <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `BRANCH_ZERO <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `BRANCH_NOT_ZERO <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `BRANCH_NEGATIVE <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `BRANCH_NOT_NEGATIVE <source> <label>`
+    - ```
+      [op code][source length][source][label length][label]
+      [ 1     ][ 1           ][ ?    ][ 1          ][ ?   ]
+      ```
 - `GOTO <label>`
-- `STOP <code>`
+    - ```
+      [op code][label length][label]
+      [ 1     ][ 1          ][ ?   ]
+      ```
+- `STOP <return code>`
     - ```
       [op code][return code]
       [ 1     ][ 1         ]
       ```
-
+- `SOCKET OPEN ?` **NOT IMPLEMENTED**
+- `SOCKET CLOSE ?` **NOT IMPLEMENTED**
+- `JUMP_RETURN ?` **NOT IMPLEMENTED**
+- `JUMP_BACK ?` **NOT IMPLEMENTED**
 
 # Dot codes
 
