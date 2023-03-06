@@ -1,6 +1,9 @@
 package memstore
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+)
 
 var LabelData map[string]int
 var BoolData map[string]bool
@@ -9,6 +12,9 @@ var FloatData map[string]float64
 var StringData map[string]string
 var ListData map[string][]interface{}
 var DictData map[string]map[interface{}]interface{}
+var FuncData map[string]map[string]string
+var PostalData map[string]map[string]string
+var SocketData map[string]net.Conn
 
 func Init() {
 	LabelData = map[string]int{}
@@ -18,6 +24,9 @@ func Init() {
 	StringData = map[string]string{}
 	ListData = map[string][]interface{}{}
 	DictData = map[string]map[interface{}]interface{}{}
+	FuncData = map[string]map[string]string{}
+	PostalData = map[string]map[string]string{}
+	SocketData = map[string]net.Conn{}
 }
 
 func PrintState() {
@@ -28,4 +37,7 @@ func PrintState() {
 	fmt.Printf("String data: %v\n", StringData)
 	fmt.Printf("List data: %v\n", ListData)
 	fmt.Printf("Dict data: %v\n", DictData)
+	fmt.Printf("Func data: %v\n", FuncData)
+	fmt.Printf("Postal data: %v\n", PostalData)
+	fmt.Printf("Socket data: %v\n", SocketData)
 }
