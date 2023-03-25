@@ -3,19 +3,17 @@ package main
 import (
 	"fmt"
 	"os"
-	"quiver/assembler"
-	"quiver/utils"
-	"quiver/vm"
+	"quiverc/assembler"
+	"quiverc/utils"
 )
 
 func main() {
 	usage := `
-usage: quiver <command> <path> [-h|--help]
+usage: quiverc <command> <path> [-h|--help]
 
 commands:
 	assemble    Assemble a .qasm file into a bytecode
 	compile     Compile quiver source down to bytecode
-	run         Run an assembled quiver application
 
 arguments:
 	--help      Show this help message and exit
@@ -48,8 +46,6 @@ arguments:
 		assembler.Assemble(path)
 	case "compile":
 		fmt.Println("Not implemented")
-	case "run":
-		vm.Run(path)
 	default:
 		fmt.Printf("Invalid command: %s\n", command)
 		fmt.Println(usage)
