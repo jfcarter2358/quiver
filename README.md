@@ -54,9 +54,9 @@ A programming language designed to merge the ease of writing with Python with th
 - [ ] Store function bytecode to either run or pass to child process
 - [ ] Pass context to local functions
 
-**QUIVER-9 :: Split compiler and VM**
+**~~QUIVER-9 :: Split compiler and VM~~**
 
-- [ ] Split compiler and VM into quiverc and quiver
+- [x] Split compiler and VM into quiverc and quiver
 
 **QUIVER-10 :: Bytecode loading and execution**
 
