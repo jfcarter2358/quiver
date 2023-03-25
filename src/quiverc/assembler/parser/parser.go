@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"quiver/assembler/dotcodes"
-	"quiver/assembler/opcodes"
-	"quiver/enums"
+	"quiverc/assembler/dotcodes"
+	"quiverc/assembler/opcodes"
+	"quiverc/enums"
 	"strings"
 )
 

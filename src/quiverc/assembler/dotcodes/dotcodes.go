@@ -1,8 +1,8 @@
 package dotcodes
 
 import (
-	"quiver/assembler/utils"
-	"quiver/enums"
+	"quiverc/assembler/utils"
+	"quiverc/enums"
 )
 
 func ProcessLiteral(parts []string) ([]byte, error) {

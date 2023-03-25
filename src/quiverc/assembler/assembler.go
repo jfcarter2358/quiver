@@ -2,9 +2,9 @@ package assembler
 
 import (
 	"fmt"
-	"quiver/assembler/fileio"
-	"quiver/assembler/parser"
-	"quiver/assembler/utils"
+	"quiverc/assembler/fileio"
+	"quiverc/assembler/parser"
+	"quiverc/assembler/utils"
 	"strings"
 )
 

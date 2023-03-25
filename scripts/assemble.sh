@@ -5,6 +5,6 @@ mkdir -p out
 file_path="${1%.*}"
 file="${file_path##*/}"
 
-./dist/quiver assemble $@
+./dist/quiverc assemble $@
 
 mv "${file_path}.qvc" "out/${file}.qvc"
