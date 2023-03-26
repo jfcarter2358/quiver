@@ -17,7 +17,8 @@ func Run(path string) {
 
 	memstore.Init()
 
-	byteCode, err = parser.ParseBlockData(byteCode)
+	byteCode, err = parser.ParseBlockData(byteCode, &memstore.Vars)
+
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +29,7 @@ func Run(path string) {
 
 	// fmt.Printf("%v\n", instructions)
 
-	err = runner.Run(instructions)
+	err = runner.Run(instructions, &memstore.Vars)
 	if err != nil {
 		panic(err)
 	}

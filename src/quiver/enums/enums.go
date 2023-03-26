@@ -19,6 +19,7 @@ const DATATYPE_NAME_FLOAT = "float"
 const DATATYPE_NAME_STRING = "string"
 const DATATYPE_NAME_LIST = "list"
 const DATATYPE_NAME_DICT = "dict"
+const DATATYPE_NAME_LABEL = "label"
 
 const DATATYPE_BYTE_NULL = byte(0)
 const DATATYPE_BYTE_BOOL = byte(1)
@@ -27,6 +28,7 @@ const DATATYPE_BYTE_FLOAT = byte(3)
 const DATATYPE_BYTE_STRING = byte(4)
 const DATATYPE_BYTE_LIST = byte(5)
 const DATATYPE_BYTE_DICT = byte(6)
+const DATATYPE_BYTE_LABEL = byte(7)
 
 /* -------- OP CODES -------- */
 
