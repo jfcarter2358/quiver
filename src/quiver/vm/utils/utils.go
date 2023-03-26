@@ -50,21 +50,114 @@ func CoerceString(data []byte) string {
 	return strings.Trim(stringRep, "\"")
 }
 
-func GetVariableDataType(name string) byte {
-	if _, ok := memstore.BoolData[name]; ok {
+func GetVariableDataType(name string, vars *memstore.VariableStore) byte {
+	if _, ok := vars.BoolData[name]; ok {
 		return enums.DATATYPE_BYTE_BOOL
 	}
-	if _, ok := memstore.IntData[name]; ok {
+	if _, ok := vars.IntData[name]; ok {
 		return enums.DATATYPE_BYTE_INT
 	}
-	if _, ok := memstore.FloatData[name]; ok {
+	if _, ok := vars.FloatData[name]; ok {
 		return enums.DATATYPE_BYTE_FLOAT
 	}
-	if _, ok := memstore.StringData[name]; ok {
+	if _, ok := vars.StringData[name]; ok {
 		return enums.DATATYPE_BYTE_STRING
 	}
-	if _, ok := memstore.ListData[name]; ok {
+	if _, ok := vars.ListData[name]; ok {
 		return enums.DATATYPE_BYTE_LIST
 	}
 	return enums.DATATYPE_BYTE_NULL
+}
+
+func GetVariableContext(key string, dataType byte, vars *memstore.VariableStore) *memstore.VariableStore {
+	baseStore := vars
+	tempStore := vars
+
+	switch dataType {
+	case enums.DATATYPE_BYTE_BOOL:
+		for tempStore != nil {
+			if _, ok := tempStore.BoolData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_FLOAT:
+		for tempStore != nil {
+			if _, ok := tempStore.FloatData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_INT:
+		for tempStore != nil {
+			if _, ok := tempStore.IntData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_STRING:
+		for tempStore != nil {
+			if _, ok := tempStore.StringData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_DICT:
+		for tempStore != nil {
+			if _, ok := tempStore.DictData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_LIST:
+		for tempStore != nil {
+			if _, ok := tempStore.ListData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	case enums.DATATYPE_BYTE_LABEL:
+		for tempStore != nil {
+			if _, ok := tempStore.LabelData[key]; !ok {
+				tempStore = tempStore.Parent
+				continue
+			}
+			break
+		}
+		if tempStore == nil {
+			return baseStore
+		}
+		return tempStore
+	}
+	return baseStore
 }

@@ -26,7 +26,7 @@ func advanceInstruction(instructions []byte, advance int) []byte {
 	return instructions
 }
 
-func ParseBlockData(byteCode []byte) ([]byte, error) {
+func ParseBlockData(byteCode []byte, vars *memstore.VariableStore) ([]byte, error) {
 	dataLength := utils.CoerceByteInt(byteCode[:8])
 	byteCode = byteCode[8:]
 
@@ -57,25 +57,25 @@ func ParseBlockData(byteCode []byte) ([]byte, error) {
 				if err != nil {
 					return nil, err
 				}
-				memstore.BoolData[source] = data
+				vars.BoolData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 			case enums.DATATYPE_BYTE_INT:
 				data, err := utils.CoerceInt(byteCode[:dataLength])
 				if err != nil {
 					return nil, err
 				}
-				memstore.IntData[source] = data
+				vars.IntData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 			case enums.DATATYPE_BYTE_FLOAT:
 				data, err := utils.CoerceFloat(byteCode[:dataLength])
 				if err != nil {
 					return nil, err
 				}
-				memstore.FloatData[source] = data
+				vars.FloatData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 			case enums.DATATYPE_BYTE_STRING:
 				data := utils.CoerceString(byteCode[:dataLength])
-				memstore.StringData[source] = data
+				vars.StringData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 			}
 
@@ -88,7 +88,7 @@ func ParseBlockData(byteCode []byte) ([]byte, error) {
 
 			programLine := utils.CoerceByteInt(byteCode[:8])
 
-			memstore.LabelData[labelName] = programLine - 1
+			vars.LabelData[labelName] = programLine - 1
 			byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 8)
 		}
 	}

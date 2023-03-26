@@ -44,10 +44,10 @@ A programming language designed to merge the ease of writing with Python with th
 - [ ] Byte datatype
 - [ ] Remove int/float combo operations
 
-**QUIVER-7 :: Variable management**
+**~~QUIVER-7 :: Variable management~~**
 
-- [ ] Make variable storage a struct with a pointer to higher contexts to allow for local and global variables
-- [ ] Check local variables when getting values, if not found then go up a context, repeat if necessary
+- [x] Make variable storage a struct with a pointer to higher contexts to allow for local and global variables
+- [x] Check local variables when getting values, if not found then go up a context, repeat if necessary
 
 **QUIVER-8 :: Functions**
 
@@ -67,3 +67,6 @@ A programming language designed to merge the ease of writing with Python with th
 
 - [ ] For processes start them and pass messages via System V with bytecode containing value of function args via the data load block
 
+**QUIVER-12 :: Optimization**
+
+- [ ] Break out operations into type specific to remove type checking statements
