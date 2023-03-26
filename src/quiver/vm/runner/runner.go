@@ -169,11 +169,11 @@ func doAdd(instruction parser.Instruction, programCounter int) (int, error) {
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = memstore.IntData[a] + memstore.IntData[b]
+		memstore.Vars.IntData[c] = memstore.Vars.IntData[a] + memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.FloatData[c] = memstore.FloatData[a] + memstore.FloatData[b]
+		memstore.Vars.FloatData[c] = memstore.Vars.FloatData[a] + memstore.Vars.FloatData[b]
 	case enums.DATATYPE_BYTE_STRING:
-		memstore.StringData[c] = memstore.StringData[a] + memstore.StringData[b]
+		memstore.Vars.StringData[c] = memstore.Vars.StringData[a] + memstore.Vars.StringData[b]
 	default:
 		return 0, fmt.Errorf("add operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -206,9 +206,9 @@ func doSubtract(instruction parser.Instruction, programCounter int) (int, error)
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = memstore.IntData[a] - memstore.IntData[b]
+		memstore.Vars.IntData[c] = memstore.Vars.IntData[a] - memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.FloatData[c] = memstore.FloatData[a] - memstore.FloatData[b]
+		memstore.FVars.loatData[c] = memstore.Vars.FloatData[a] - memstore.Vars.FloatData[b]
 	default:
 		return 0, fmt.Errorf("subtract operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -241,9 +241,9 @@ func doMultiply(instruction parser.Instruction, programCounter int) (int, error)
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = memstore.IntData[a] * memstore.IntData[b]
+		memstore.Vars.IntData[c] = memstore.Vars.IntData[a] * memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.FloatData[c] = memstore.FloatData[a] * memstore.FloatData[b]
+		memstore.Vars.FloatData[c] = memstore.Vars.FloatData[a] * memstore.Vars.FloatData[b]
 	default:
 		return 0, fmt.Errorf("multiply operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -276,9 +276,9 @@ func doDivide(instruction parser.Instruction, programCounter int) (int, error) {
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = memstore.IntData[a] / memstore.IntData[b]
+		memstore.Vars.IntData[c] = memstore.Vars.IntData[a] / memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.FloatData[c] = memstore.FloatData[a] / memstore.FloatData[b]
+		memstore.Vars.FloatData[c] = memstore.Vars.FloatData[a] / memstore.Vars.FloatData[b]
 	default:
 		return 0, fmt.Errorf("divide operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -311,7 +311,7 @@ func doModulo(instruction parser.Instruction, programCounter int) (int, error) {
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = memstore.IntData[a] % memstore.IntData[b]
+		memstore.Vars.IntData[c] = memstore.Vars.IntData[a] % memstore.Vars.IntData[b]
 	default:
 		return 0, fmt.Errorf("modulo operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -344,9 +344,9 @@ func doPower(instruction parser.Instruction, programCounter int) (int, error) {
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		memstore.IntData[c] = int(math.Pow(float64(memstore.IntData[a]), float64(memstore.IntData[b])))
+		memstore.Vars.IntData[c] = int(math.Pow(float64(memstore.Vars.IntData[a]), float64(memstore.Vars.IntData[b])))
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.FloatData[c] = math.Pow(memstore.FloatData[a], memstore.FloatData[b])
+		memstore.Vars.FloatData[c] = math.Pow(memstore.Vars.FloatData[a], memstore.Vars.FloatData[b])
 	default:
 		return 0, fmt.Errorf("power operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -444,25 +444,15 @@ func doGreater(instruction parser.Instruction, programCounter int) (int, error) 
 	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in add operation: %s", dataTypeAString)
 	}
-	if dataTypeB != enums.DATATYPE_BYTE_INT || dataTypeB != enums.DATATYPE_BYTE_FLOAT {
-		return 0, fmt.Errorf("data type invalid in add operation: %s", dataTypeBString)
+	if dataTypeA != dataTypeB {
+		return 0, fmt.Errorf("data type mismatch in power operation: %s, %s", dataTypeAString, dataTypeBString)
 	}
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.IntData[a] > memstore.IntData[b]
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = float64(memstore.IntData[a]) > memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.IntData[a] > memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.FloatData[a] > float64(memstore.IntData[b])
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = memstore.FloatData[a] > memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.FloatData[a] > memstore.Vars.FloatData[b]
 	}
 
 	programCounter += 1
@@ -484,25 +474,15 @@ func doGreaterEqual(instruction parser.Instruction, programCounter int) (int, er
 	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in add operation: %s", dataTypeAString)
 	}
-	if dataTypeB != enums.DATATYPE_BYTE_INT || dataTypeB != enums.DATATYPE_BYTE_FLOAT {
-		return 0, fmt.Errorf("data type invalid in greater equal operation: %s", dataTypeBString)
+	if dataTypeA != dataTypeB {
+		return 0, fmt.Errorf("data type mismatch in power operation: %s, %s", dataTypeAString, dataTypeBString)
 	}
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.IntData[a] >= memstore.IntData[b]
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = float64(memstore.IntData[a]) >= memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.IntData[a] >= memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.FloatData[a] >= float64(memstore.IntData[b])
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = memstore.FloatData[a] >= memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.FloatData[a] >= memstore.Vars.FloatData[b]
 	}
 
 	programCounter += 1
@@ -527,13 +507,13 @@ func doEqual(instruction parser.Instruction, programCounter int) (int, error) {
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_BOOL:
-		memstore.BoolData[c] = memstore.BoolData[a] == memstore.BoolData[b]
+		memstore.Vars.BoolData[c] = memstore.Vars.BoolData[a] == memstore.Vars.BoolData[b]
 	case enums.DATATYPE_BYTE_INT:
-		memstore.BoolData[c] = memstore.IntData[a] == memstore.IntData[b]
+		memstore.Vars.BoolData[c] = memstore.Vars.IntData[a] == memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		memstore.BoolData[c] = memstore.FloatData[a] == memstore.FloatData[b]
+		memstore.Vars.BoolData[c] = memstore.Vars.FloatData[a] == memstore.Vars.FloatData[b]
 	case enums.DATATYPE_BYTE_STRING:
-		memstore.BoolData[c] = memstore.StringData[a] == memstore.StringData[b]
+		memstore.Vars.BoolData[c] = memstore.Vars.StringData[a] == memstore.Vars.StringData[b]
 	default:
 		return 0, fmt.Errorf("equal operation is not yet implemented for type %s", dataTypeA)
 	}
@@ -557,25 +537,15 @@ func doLessEqual(instruction parser.Instruction, programCounter int) (int, error
 	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in less equal operation: %s", dataTypeAString)
 	}
-	if dataTypeB != enums.DATATYPE_BYTE_INT || dataTypeB != enums.DATATYPE_BYTE_FLOAT {
-		return 0, fmt.Errorf("data type invalid in less equal operation: %s", dataTypeBString)
+	if dataTypeA != dataTypeB {
+		return 0, fmt.Errorf("data type mismatch in power operation: %s, %s", dataTypeAString, dataTypeBString)
 	}
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.IntData[a] <= memstore.IntData[b]
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = float64(memstore.IntData[a]) <= memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.IntData[a] <= memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.FloatData[a] <= float64(memstore.IntData[b])
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = memstore.FloatData[a] <= memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.FloatData[a] <= memstore.Vars.FloatData[b]
 	}
 
 	programCounter += 1
@@ -597,25 +567,15 @@ func doLess(instruction parser.Instruction, programCounter int) (int, error) {
 	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in less operation: %s", dataTypeAString)
 	}
-	if dataTypeB != enums.DATATYPE_BYTE_INT || dataTypeB != enums.DATATYPE_BYTE_FLOAT {
-		return 0, fmt.Errorf("data type invalid in less operation: %s", dataTypeBString)
+	if dataTypeA != dataTypeB {
+		return 0, fmt.Errorf("data type mismatch in power operation: %s, %s", dataTypeAString, dataTypeBString)
 	}
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.IntData[a] < memstore.IntData[b]
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = float64(memstore.IntData[a]) < memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.IntData[a] < memstore.Vars.IntData[b]
 	case enums.DATATYPE_BYTE_FLOAT:
-		switch dataTypeB {
-		case enums.DATATYPE_BYTE_INT:
-			memstore.BoolData[c] = memstore.FloatData[a] < float64(memstore.IntData[b])
-		case enums.DATATYPE_BYTE_FLOAT:
-			memstore.BoolData[c] = memstore.FloatData[a] < memstore.FloatData[b]
-		}
+		memstore.Vars.BoolData[c] = memstore.Vars.FloatData[a] < memstore.Vars.FloatData[b]
 	}
 
 	programCounter += 1
@@ -712,18 +672,18 @@ func doBranchPositive(instruction parser.Instruction, programCounter int) (int, 
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_BOOL:
-		if memstore.BoolData[a] {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.BoolData[a] {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_INT:
-		if memstore.IntData[a] > 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.IntData[a] > 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_FLOAT:
-		if memstore.FloatData[a] > 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.FloatData[a] > 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	default:
@@ -743,18 +703,18 @@ func doBranchNotPositive(instruction parser.Instruction, programCounter int) (in
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_BOOL:
-		if !memstore.BoolData[a] {
-			programCounter = memstore.LabelData[b]
+		if !memstore.Vars.BoolData[a] {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_INT:
-		if memstore.IntData[a] <= 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.IntData[a] <= 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_FLOAT:
-		if memstore.FloatData[a] <= 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.FloatData[a] <= 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	default:
@@ -805,18 +765,18 @@ func doBranchNotZero(instruction parser.Instruction, programCounter int) (int, e
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_BOOL:
-		if memstore.BoolData[a] {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.BoolData[a] {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_INT:
-		if memstore.IntData[a] != 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.IntData[a] != 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_FLOAT:
-		if memstore.FloatData[a] != 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.FloatData[a] != 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	default:
@@ -836,13 +796,13 @@ func doBranchNegative(instruction parser.Instruction, programCounter int) (int, 
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		if memstore.IntData[a] < 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.IntData[a] < 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_FLOAT:
-		if memstore.FloatData[a] < 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.FloatData[a] < 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	default:
@@ -862,13 +822,13 @@ func doBranchNotNegative(instruction parser.Instruction, programCounter int) (in
 
 	switch dataTypeA {
 	case enums.DATATYPE_BYTE_INT:
-		if memstore.IntData[a] >= 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.IntData[a] >= 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	case enums.DATATYPE_BYTE_FLOAT:
-		if memstore.FloatData[a] >= 0 {
-			programCounter = memstore.LabelData[b]
+		if memstore.Vars.FloatData[a] >= 0 {
+			programCounter = memstore.Vars.LabelData[b]
 			return programCounter, nil
 		}
 	default:
@@ -883,14 +843,14 @@ func doBranchNotNegative(instruction parser.Instruction, programCounter int) (in
 func doGoto(instruction parser.Instruction, programCounter int) (int, error) {
 	a := string(instruction.Args[0])
 
-	programCounter = memstore.LabelData[a]
+	programCounter = memstore.Vars.LabelData[a]
 	return programCounter, nil
 }
 
 func doStop(instruction parser.Instruction, programCounter int) (int, error) {
 	a := string(instruction.Args[0])
 
-	returnCode := memstore.IntData[a]
+	returnCode := memstore.Vars.IntData[a]
 
 	os.Exit(returnCode)
 

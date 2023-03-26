@@ -46,7 +46,7 @@ A programming language designed to merge the ease of writing with Python with th
 
 **QUIVER-7 :: Variable management**
 
-- [ ] Make variable storage a struct with a pointer to higher contexts to allow for local and global variables
+- [x] Make variable storage a struct with a pointer to higher contexts to allow for local and global variables
 - [ ] Check local variables when getting values, if not found then go up a context, repeat if necessary
 
 **QUIVER-8 :: Functions**
