@@ -58,15 +58,16 @@ A programming language designed to merge the ease of writing with Python with th
 
 - [x] Split compiler and VM into quiverc and quiver
 
-**QUIVER-10 :: Bytecode loading and execution**
 
-- [ ] Create "data load" function to read bytecode data and load it into context
-- [ ] Create "run bytecode" function so we can ignore data load for local functions
-
-**QUIVER-11 :: Child processes**
+**QUIVER-10 :: Child processes**
 
 - [ ] For processes start them and pass messages via System V with bytecode containing value of function args via the data load block
 
-**QUIVER-12 :: Optimization**
+**QUIVER-11 :: Optimization**
 
 - [ ] Break out operations into type specific to remove type checking statements
+
+**QUIVER_12 :: Dictionaries and lists**
+
+- [ ] Implement dictionary datatype
+- [ ] Implement list datatype

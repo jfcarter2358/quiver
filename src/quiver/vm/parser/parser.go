@@ -77,6 +77,44 @@ func ParseBlockData(byteCode []byte, vars *memstore.VariableStore) ([]byte, erro
 				data := utils.CoerceString(byteCode[:dataLength])
 				vars.StringData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
+			case enums.DATATYPE_BYTE_DICT:
+				data, err := utils.CoerceDict(byteCode[:dataLength])
+				if err != nil {
+					return nil, err
+				}
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
+
+				keyType := byteCode[0]
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
+
+				switch keyType {
+				case enums.DATATYPE_BYTE_BOOL:
+
+				case enums.DATATYPE_BYTE_INT:
+
+				case enums.DATATYPE_BYTE_FLOAT:
+
+				case enums.DATATYPE_BYTE_STRING:
+
+				}
+				vars.DictData[source] = data
+
+				valType := byteCode[0]
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
+
+				vars.DictTypes[source] = map[string]byte{"key": keyType, "val": valType}
+			case enums.DATATYPE_BYTE_LIST:
+				data, err := utils.CoerceList(byteCode[:dataLength])
+				if err != nil {
+					return nil, err
+				}
+				vars.ListData[source] = data
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
+
+				listType := byteCode[0]
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
+
+				vars.ListType[source] = listType
 			}
 
 		case enums.DOT_CODE_BYTE_LABEL:

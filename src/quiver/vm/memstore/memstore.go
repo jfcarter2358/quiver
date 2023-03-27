@@ -6,34 +6,53 @@ import (
 )
 
 type VariableStore struct {
-	LabelData  map[string]int
-	BoolData   map[string]bool
-	IntData    map[string]int
-	FloatData  map[string]float64
-	StringData map[string]string
-	ListData   map[string][]interface{}
-	DictData   map[string]map[interface{}]interface{}
-	FuncData   map[string]map[string]byte
-	PostalData map[string]map[string]string
-	SocketData map[string]net.Conn
-	Parent     *VariableStore
+	LabelData      map[string]int
+	BoolData       map[string]bool
+	IntData        map[string]int
+	FloatData      map[string]float64
+	StringData     map[string]string
+	ListData       map[string][]DepthDataStore
+	ListType       map[string]byte
+	BoolDictData   map[string]map[bool]DepthDataStore
+	IntDictData    map[string]map[int]DepthDataStore
+	FloatDictData  map[string]map[float64]DepthDataStore
+	StringDictData map[string]map[string]DepthDataStore
+	DictTypes      map[string]byte
+	FuncData       map[string]map[string]byte
+	PostalData     map[string]map[string]string
+	SocketData     map[string]net.Conn
+	Parent         *VariableStore
+}
+
+type DepthDataStore struct {
+	BoolData   bool
+	IntData    int
+	FloatData  float64
+	StringData string
+	DictData   string
+	ListData   string
 }
 
 var Vars VariableStore
 
 func Init() {
 	Vars = VariableStore{
-		LabelData:  map[string]int{},
-		BoolData:   map[string]bool{},
-		IntData:    map[string]int{},
-		FloatData:  map[string]float64{},
-		StringData: map[string]string{},
-		ListData:   map[string][]interface{}{},
-		DictData:   map[string]map[interface{}]interface{}{},
-		FuncData:   map[string]map[string]byte{},
-		PostalData: map[string]map[string]string{},
-		SocketData: map[string]net.Conn{},
-		Parent:     nil,
+		LabelData:      map[string]int{},
+		BoolData:       map[string]bool{},
+		IntData:        map[string]int{},
+		FloatData:      map[string]float64{},
+		StringData:     map[string]string{},
+		ListData:       map[string][]DepthDataStore{},
+		ListType:       map[string]byte{},
+		BoolDictData:   map[string]map[bool]DepthDataStore{}
+		IntDictData:    map[string]map[int]DepthDataStore{},
+		FloatDictData:  map[string]map[float64]DepthDataStore{},
+		StringDictData: map[string]map[string]DepthDataStore{},
+		DictTypes:      map[string]map[string]byte{},
+		FuncData:       map[string]map[string]byte{},
+		PostalData:     map[string]map[string]string{},
+		SocketData:     map[string]net.Conn{},
+		Parent:         nil,
 	}
 }
 

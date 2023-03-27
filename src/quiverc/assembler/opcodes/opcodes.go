@@ -202,3 +202,33 @@ func ProcessStop(parts []string) []byte {
 
 	return returnBytes
 }
+
+func ProcessCopy(parts []string) []byte {
+	returnBytes := process2(enums.OP_CODE_BYTE_COPY, parts)
+
+	return returnBytes
+}
+
+func ProcessDictAccess(parts []string) []byte {
+	returnBytes := process2(enums.OP_CODE_BYTE_DICT_ACCESS, parts)
+
+	return returnBytes
+}
+
+func ProcessDictAssign(parts []string) []byte {
+	returnBytes := process2(enums.OP_CODE_BYTE_DICT_ASSIGN, parts)
+
+	return returnBytes
+}
+
+func ProcessListAccess(parts []string) []byte {
+	returnBytes := process2(enums.OP_CODE_BYTE_LIST_ACCESS, parts)
+
+	return returnBytes
+}
+
+func ProcessListAssign(parts []string) []byte {
+	returnBytes := process2(enums.OP_CODE_BYTE_LIST_ASSIGN, parts)
+
+	return returnBytes
+}

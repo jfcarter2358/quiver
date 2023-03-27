@@ -11,15 +11,29 @@ func getParts(line string) []string {
 	var parts []string
 	var part string
 	quoted := false
+	dictDepth := 0
+	listDepth := 0
 
 	for _, char := range line {
-		if char == ' ' && !quoted {
+		if char == ' ' && !quoted && dictDepth == 0 && listDepth == 0 {
 			parts = append(parts, part)
 			part = ""
 			continue
 		}
-		if char == '"' {
+		if char == '"' && dictDepth == 0 && listDepth == 0 {
 			quoted = !quoted
+		}
+		if !quoted {
+			switch char {
+			case '{':
+				dictDepth += 1
+			case '}':
+				dictDepth -= 1
+			case '[':
+				listDepth += 1
+			case ']':
+				listDepth -= 1
+			}
 		}
 		part += string(char)
 	}
@@ -147,6 +161,21 @@ func SecondPass(lines []string) ([]byte, error) {
 			blockData = append(blockData, opData...)
 		case enums.OP_CODE_NAME_STOP:
 			opData := opcodes.ProcessStop(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_COPY:
+			opData := opcodes.ProcessCopy(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_DICT_ACCESS:
+			opData := opcodes.ProcessDictAccess(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_DICT_ASSIGN:
+			opData := opcodes.ProcessDictAssign(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_LIST_ACCESS:
+			opData := opcodes.ProcessListAccess(parts)
+			blockData = append(blockData, opData...)
+		case enums.OP_CODE_NAME_LIST_ASSIGN:
+			opData := opcodes.ProcessListAssign(parts)
 			blockData = append(blockData, opData...)
 		default:
 			programCounter += 1

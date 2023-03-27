@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/json"
 	"quiver/enums"
 	"quiver/vm/memstore"
 	"strconv"
@@ -48,6 +49,18 @@ func CoerceString(data []byte) string {
 	stringRep := string(bytes.Trim(data, "\x00"))
 	stringRep = strings.ReplaceAll(stringRep, "\\n", "\n")
 	return strings.Trim(stringRep, "\"")
+}
+
+func CoerceDict(data []byte) (map[interface{}]interface{}, error) {
+	var val map[interface{}]interface{}
+	err := json.Unmarshal(data, &val)
+	return val, err
+}
+
+func CoerceList(data []byte) ([]interface{}, error) {
+	var val []interface{}
+	err := json.Unmarshal(data, &val)
+	return val, err
 }
 
 func GetVariableDataType(name string, vars *memstore.VariableStore) byte {
