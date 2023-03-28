@@ -210,25 +210,25 @@ func ProcessCopy(parts []string) []byte {
 }
 
 func ProcessDictAccess(parts []string) []byte {
-	returnBytes := process2(enums.OP_CODE_BYTE_DICT_ACCESS, parts)
+	returnBytes := process3(enums.OP_CODE_BYTE_DICT_ACCESS, parts)
 
 	return returnBytes
 }
 
 func ProcessDictAssign(parts []string) []byte {
-	returnBytes := process2(enums.OP_CODE_BYTE_DICT_ASSIGN, parts)
+	returnBytes := process3(enums.OP_CODE_BYTE_DICT_ASSIGN, parts)
 
 	return returnBytes
 }
 
 func ProcessListAccess(parts []string) []byte {
-	returnBytes := process2(enums.OP_CODE_BYTE_LIST_ACCESS, parts)
+	returnBytes := process3(enums.OP_CODE_BYTE_LIST_ACCESS, parts)
 
 	return returnBytes
 }
 
 func ProcessListAssign(parts []string) []byte {
-	returnBytes := process2(enums.OP_CODE_BYTE_LIST_ASSIGN, parts)
+	returnBytes := process3(enums.OP_CODE_BYTE_LIST_ASSIGN, parts)
 
 	return returnBytes
 }

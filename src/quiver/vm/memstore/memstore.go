@@ -20,39 +20,42 @@ type VariableStore struct {
 }
 
 type ListDataStore struct {
-	ValType    byte
-	BoolData   []bool
-	IntData    []int
-	FloatData  []float64
-	StringData []string
-	DictData   []DictDataStore
-	ListData   []ListDataStore
+	BoolData   map[int]bool
+	IntData    map[int]int
+	FloatData  map[int]float64
+	StringData map[int]string
+	DictData   map[int]DictDataStore
+	ListData   map[int]ListDataStore
 }
 
 type DictDataStore struct {
-	KeyType          byte
-	ValType          byte
-	IntBoolData      map[int]bool
-	IntIntData       map[int]int
-	IntFloatData     map[int]float64
-	IntStringData    map[int]string
-	IntDictData      map[int]DictDataStore
-	IntListData      map[int]ListDataStore
-	FloatBoolData    map[float64]bool
-	FloatIntData     map[float64]int
-	FloatFloatData   map[float64]float64
-	FloatStringData  map[float64]string
-	FloatDictData    map[float64]DictDataStore
-	FloatListData    map[float64]ListDataStore
-	StringBoolData   map[string]bool
-	StringIntData    map[string]int
-	StringFloatData  map[string]float64
-	StringStringData map[string]string
-	StringDictData   map[string]DictDataStore
-	StringListData   map[string]ListDataStore
+	BoolData   map[string]bool
+	IntData    map[string]int
+	FloatData  map[string]float64
+	StringData map[string]string
+	DictData   map[string]DictDataStore
+	ListData   map[string]ListDataStore
 }
 
 var Vars VariableStore
+
+func (d *DictDataStore) Init() {
+	d.BoolData = map[string]bool{}
+	d.IntData = map[string]int{}
+	d.FloatData = map[string]float64{}
+	d.StringData = map[string]string{}
+	d.DictData = map[string]DictDataStore{}
+	d.ListData = map[string]ListDataStore{}
+}
+
+func (l *ListDataStore) Init() {
+	l.BoolData = map[int]bool{}
+	l.IntData = map[int]int{}
+	l.FloatData = map[int]float64{}
+	l.StringData = map[int]string{}
+	l.DictData = map[int]DictDataStore{}
+	l.ListData = map[int]ListDataStore{}
+}
 
 func Init() {
 	Vars = VariableStore{

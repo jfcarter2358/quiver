@@ -140,6 +140,31 @@ func Run(instructions []parser.Instruction, vars *memstore.VariableStore) error 
 			if err != nil {
 				return err
 			}
+		case enums.OP_CODE_BYTE_COPY:
+			programCounter, err = doCopy(instruction, programCounter, vars)
+			if err != nil {
+				return err
+			}
+		case enums.OP_CODE_BYTE_DICT_ASSIGN:
+			programCounter, err = doDictAssign(instruction, programCounter, vars)
+			if err != nil {
+				return err
+			}
+		case enums.OP_CODE_BYTE_DICT_ACCESS:
+			programCounter, err = doDictAccess(instruction, programCounter, vars)
+			if err != nil {
+				return err
+			}
+		case enums.OP_CODE_BYTE_LIST_ASSIGN:
+			programCounter, err = doListAssign(instruction, programCounter, vars)
+			if err != nil {
+				return err
+			}
+		case enums.OP_CODE_BYTE_LIST_ACCESS:
+			programCounter, err = doListAccess(instruction, programCounter, vars)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -179,7 +204,7 @@ func doAdd(instruction parser.Instruction, programCounter int, vars *memstore.Va
 	case enums.DATATYPE_BYTE_STRING:
 		cVars.StringData[c] = aVars.StringData[a] + bVars.StringData[b]
 	default:
-		return 0, fmt.Errorf("add operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("add operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -218,7 +243,7 @@ func doSubtract(instruction parser.Instruction, programCounter int, vars *memsto
 	case enums.DATATYPE_BYTE_FLOAT:
 		cVars.FloatData[c] = aVars.FloatData[a] - bVars.FloatData[b]
 	default:
-		return 0, fmt.Errorf("subtract operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("subtract operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -257,7 +282,7 @@ func doMultiply(instruction parser.Instruction, programCounter int, vars *memsto
 	case enums.DATATYPE_BYTE_FLOAT:
 		cVars.FloatData[c] = aVars.FloatData[a] * bVars.FloatData[b]
 	default:
-		return 0, fmt.Errorf("multiply operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("multiply operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -296,7 +321,7 @@ func doDivide(instruction parser.Instruction, programCounter int, vars *memstore
 	case enums.DATATYPE_BYTE_FLOAT:
 		cVars.FloatData[c] = aVars.FloatData[a] / bVars.FloatData[b]
 	default:
-		return 0, fmt.Errorf("divide operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("divide operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -333,7 +358,7 @@ func doModulo(instruction parser.Instruction, programCounter int, vars *memstore
 	case enums.DATATYPE_BYTE_INT:
 		cVars.IntData[c] = aVars.IntData[a] % bVars.IntData[b]
 	default:
-		return 0, fmt.Errorf("modulo operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("modulo operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -372,7 +397,7 @@ func doPower(instruction parser.Instruction, programCounter int, vars *memstore.
 	case enums.DATATYPE_BYTE_FLOAT:
 		cVars.FloatData[c] = math.Pow(aVars.FloatData[a], bVars.FloatData[b])
 	default:
-		return 0, fmt.Errorf("power operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("power operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -465,7 +490,7 @@ func doGreater(instruction parser.Instruction, programCounter int, vars *memstor
 	dataTypeAString := enums.ByteToDataType(dataTypeA)
 	dataTypeBString := enums.ByteToDataType(dataTypeB)
 
-	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
+	if dataTypeA != enums.DATATYPE_BYTE_INT && dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in add operation: %s", dataTypeAString)
 	}
 	if dataTypeA != dataTypeB {
@@ -499,7 +524,7 @@ func doGreaterEqual(instruction parser.Instruction, programCounter int, vars *me
 	dataTypeAString := enums.ByteToDataType(dataTypeA)
 	dataTypeBString := enums.ByteToDataType(dataTypeB)
 
-	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
+	if dataTypeA != enums.DATATYPE_BYTE_INT && dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in add operation: %s", dataTypeAString)
 	}
 	if dataTypeA != dataTypeB {
@@ -551,7 +576,7 @@ func doEqual(instruction parser.Instruction, programCounter int, vars *memstore.
 	case enums.DATATYPE_BYTE_STRING:
 		cVars.BoolData[c] = aVars.StringData[a] == bVars.StringData[b]
 	default:
-		return 0, fmt.Errorf("equal operation is not yet implemented for type %s", dataTypeA)
+		return 0, fmt.Errorf("equal operation is not yet implemented for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -570,7 +595,7 @@ func doLessEqual(instruction parser.Instruction, programCounter int, vars *memst
 	dataTypeAString := enums.ByteToDataType(dataTypeA)
 	dataTypeBString := enums.ByteToDataType(dataTypeB)
 
-	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
+	if dataTypeA != enums.DATATYPE_BYTE_INT && dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in less equal operation: %s", dataTypeAString)
 	}
 	if dataTypeA != dataTypeB {
@@ -604,7 +629,7 @@ func doLess(instruction parser.Instruction, programCounter int, vars *memstore.V
 	dataTypeAString := enums.ByteToDataType(dataTypeA)
 	dataTypeBString := enums.ByteToDataType(dataTypeB)
 
-	if dataTypeA != enums.DATATYPE_BYTE_INT || dataTypeA != enums.DATATYPE_BYTE_FLOAT {
+	if dataTypeA != enums.DATATYPE_BYTE_INT && dataTypeA != enums.DATATYPE_BYTE_FLOAT {
 		return 0, fmt.Errorf("data type invalid in less operation: %s", dataTypeAString)
 	}
 	if dataTypeA != dataTypeB {
@@ -717,6 +742,7 @@ func doBranchPositive(instruction parser.Instruction, programCounter int, vars *
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -738,7 +764,7 @@ func doBranchPositive(instruction parser.Instruction, programCounter int, vars *
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch positive operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch positive operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -751,6 +777,7 @@ func doBranchNotPositive(instruction parser.Instruction, programCounter int, var
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -772,7 +799,7 @@ func doBranchNotPositive(instruction parser.Instruction, programCounter int, var
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch not positive operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch not positive operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -785,6 +812,7 @@ func doBranchZero(instruction parser.Instruction, programCounter int, vars *mems
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -806,7 +834,7 @@ func doBranchZero(instruction parser.Instruction, programCounter int, vars *mems
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch zero operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch zero operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -819,6 +847,7 @@ func doBranchNotZero(instruction parser.Instruction, programCounter int, vars *m
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -840,7 +869,7 @@ func doBranchNotZero(instruction parser.Instruction, programCounter int, vars *m
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch not zero operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch not zero operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -853,6 +882,7 @@ func doBranchNegative(instruction parser.Instruction, programCounter int, vars *
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -869,7 +899,7 @@ func doBranchNegative(instruction parser.Instruction, programCounter int, vars *
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch negative operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch negative operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -882,6 +912,7 @@ func doBranchNotNegative(instruction parser.Instruction, programCounter int, var
 	b := string(instruction.Args[1])
 
 	dataTypeA := utils.GetVariableDataType(a, vars)
+	dataTypeAString := enums.ByteToDataType(dataTypeA)
 
 	aVars := utils.GetVariableContext(a, dataTypeA, vars)
 	bVars := utils.GetVariableContext(b, dataTypeA, vars)
@@ -898,7 +929,7 @@ func doBranchNotNegative(instruction parser.Instruction, programCounter int, var
 			return programCounter, nil
 		}
 	default:
-		return 0, fmt.Errorf("branch not negative operation is not defined for type %s", dataTypeA)
+		return 0, fmt.Errorf("branch not negative operation is not defined for type %s", dataTypeAString)
 	}
 
 	programCounter += 1
@@ -925,4 +956,169 @@ func doStop(instruction parser.Instruction, programCounter int, vars *memstore.V
 	os.Exit(returnCode)
 
 	return 0, nil
+}
+
+func doCopy(instruction parser.Instruction, programCounter int, vars *memstore.VariableStore) (int, error) {
+	from := string(instruction.Args[0])
+	to := string(instruction.Args[1])
+
+	fromType, err := utils.FindVariableType(from, vars)
+	if err != nil {
+		return 0, err
+	}
+	toType, err := utils.FindVariableType(to, vars)
+	if err != nil {
+		toType = fromType
+	}
+
+	fromContext := utils.GetVariableContext(from, fromType, vars)
+	toContext := utils.GetVariableContext(to, toType, vars)
+
+	switch fromType {
+	case enums.DATATYPE_BYTE_BOOL:
+		toContext.BoolData[to] = fromContext.BoolData[from]
+	case enums.DATATYPE_BYTE_INT:
+		toContext.IntData[to] = fromContext.IntData[from]
+	case enums.DATATYPE_BYTE_FLOAT:
+		toContext.FloatData[to] = fromContext.FloatData[from]
+	case enums.DATATYPE_BYTE_STRING:
+		toContext.StringData[to] = fromContext.StringData[from]
+	case enums.DATATYPE_BYTE_DICT:
+		toContext.DictData[to] = fromContext.DictData[from]
+	case enums.DATATYPE_BYTE_LIST:
+		toContext.ListData[to] = fromContext.ListData[from]
+	}
+
+	programCounter += 1
+	return programCounter, nil
+}
+
+func doDictAssign(instruction parser.Instruction, programCounter int, vars *memstore.VariableStore) (int, error) {
+	from := string(instruction.Args[0])
+	key := string(instruction.Args[1])
+	to := string(instruction.Args[2])
+
+	keyNameContext := utils.GetVariableContext(key, enums.DATATYPE_BYTE_STRING, vars)
+	key = keyNameContext.StringData[key]
+
+	fromType, err := utils.FindVariableType(from, vars)
+	if err != nil {
+		return 0, err
+	}
+	fromContext := utils.GetVariableContext(from, fromType, vars)
+	toContext := utils.GetVariableContext(to, enums.DATATYPE_BYTE_DICT, vars)
+
+	switch fromType {
+	case enums.DATATYPE_BYTE_BOOL:
+		toContext.DictData[to].BoolData[key] = fromContext.BoolData[from]
+	case enums.DATATYPE_BYTE_INT:
+		toContext.DictData[to].IntData[key] = fromContext.IntData[from]
+	case enums.DATATYPE_BYTE_FLOAT:
+		toContext.DictData[to].FloatData[key] = fromContext.FloatData[from]
+	case enums.DATATYPE_BYTE_STRING:
+		toContext.DictData[to].StringData[key] = fromContext.StringData[from]
+	case enums.DATATYPE_BYTE_DICT:
+		toContext.DictData[to].DictData[key] = fromContext.DictData[from]
+	case enums.DATATYPE_BYTE_LIST:
+		toContext.DictData[to].ListData[key] = fromContext.ListData[from]
+	}
+
+	programCounter += 1
+	return programCounter, nil
+}
+
+func doDictAccess(instruction parser.Instruction, programCounter int, vars *memstore.VariableStore) (int, error) {
+	from := string(instruction.Args[0])
+	key := string(instruction.Args[1])
+	to := string(instruction.Args[2])
+
+	keyNameContext := utils.GetVariableContext(key, enums.DATATYPE_BYTE_STRING, vars)
+	key = keyNameContext.StringData[key]
+
+	fromContext := utils.GetVariableContext(from, enums.DATATYPE_BYTE_DICT, vars)
+	fromType := utils.FindDictVariableType(key, fromContext.DictData[from])
+	toContext := utils.GetVariableContext(to, fromType, vars)
+
+	switch fromType {
+	case enums.DATATYPE_BYTE_BOOL:
+		toContext.BoolData[to] = fromContext.DictData[from].BoolData[key]
+	case enums.DATATYPE_BYTE_INT:
+		toContext.IntData[to] = fromContext.DictData[from].IntData[key]
+	case enums.DATATYPE_BYTE_FLOAT:
+		toContext.FloatData[to] = fromContext.DictData[from].FloatData[key]
+	case enums.DATATYPE_BYTE_STRING:
+		toContext.StringData[to] = fromContext.DictData[from].StringData[key]
+	case enums.DATATYPE_BYTE_DICT:
+		toContext.DictData[to] = fromContext.DictData[from].DictData[key]
+	case enums.DATATYPE_BYTE_LIST:
+		toContext.ListData[to] = fromContext.DictData[from].ListData[key]
+	}
+
+	programCounter += 1
+	return programCounter, nil
+}
+
+func doListAssign(instruction parser.Instruction, programCounter int, vars *memstore.VariableStore) (int, error) {
+	from := string(instruction.Args[0])
+	keyName := string(instruction.Args[1])
+	to := string(instruction.Args[2])
+
+	keyNameContext := utils.GetVariableContext(keyName, enums.DATATYPE_BYTE_STRING, vars)
+	key := keyNameContext.IntData[keyName]
+
+	fromType, err := utils.FindVariableType(from, vars)
+	if err != nil {
+		return 0, err
+	}
+	fromContext := utils.GetVariableContext(from, fromType, vars)
+	toContext := utils.GetVariableContext(to, enums.DATATYPE_BYTE_LIST, vars)
+
+	switch fromType {
+	case enums.DATATYPE_BYTE_BOOL:
+		toContext.ListData[to].BoolData[key] = fromContext.BoolData[from]
+	case enums.DATATYPE_BYTE_INT:
+		toContext.ListData[to].IntData[key] = fromContext.IntData[from]
+	case enums.DATATYPE_BYTE_FLOAT:
+		toContext.ListData[to].FloatData[key] = fromContext.FloatData[from]
+	case enums.DATATYPE_BYTE_STRING:
+		toContext.ListData[to].StringData[key] = fromContext.StringData[from]
+	case enums.DATATYPE_BYTE_DICT:
+		toContext.ListData[to].DictData[key] = fromContext.DictData[from]
+	case enums.DATATYPE_BYTE_LIST:
+		toContext.ListData[to].ListData[key] = fromContext.ListData[from]
+	}
+
+	programCounter += 1
+	return programCounter, nil
+}
+
+func doListAccess(instruction parser.Instruction, programCounter int, vars *memstore.VariableStore) (int, error) {
+	from := string(instruction.Args[0])
+	keyName := string(instruction.Args[1])
+	to := string(instruction.Args[2])
+
+	keyNameContext := utils.GetVariableContext(keyName, enums.DATATYPE_BYTE_STRING, vars)
+	key := keyNameContext.IntData[keyName]
+
+	fromContext := utils.GetVariableContext(from, enums.DATATYPE_BYTE_LIST, vars)
+	fromType := utils.FindListVariableType(key, fromContext.ListData[from])
+	toContext := utils.GetVariableContext(to, fromType, vars)
+
+	switch fromType {
+	case enums.DATATYPE_BYTE_BOOL:
+		toContext.BoolData[to] = fromContext.ListData[from].BoolData[key]
+	case enums.DATATYPE_BYTE_INT:
+		toContext.IntData[to] = fromContext.ListData[from].IntData[key]
+	case enums.DATATYPE_BYTE_FLOAT:
+		toContext.FloatData[to] = fromContext.ListData[from].FloatData[key]
+	case enums.DATATYPE_BYTE_STRING:
+		toContext.StringData[to] = fromContext.ListData[from].StringData[key]
+	case enums.DATATYPE_BYTE_DICT:
+		toContext.DictData[to] = fromContext.ListData[from].DictData[key]
+	case enums.DATATYPE_BYTE_LIST:
+		toContext.ListData[to] = fromContext.ListData[from].ListData[key]
+	}
+
+	programCounter += 1
+	return programCounter, nil
 }

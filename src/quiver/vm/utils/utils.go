@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
+	"fmt"
 	"quiver/enums"
 	"quiver/vm/memstore"
 	"strconv"
@@ -51,261 +52,88 @@ func CoerceString(data []byte) string {
 	return strings.Trim(stringRep, "\"")
 }
 
-func CoerceDict(data []byte, keyType, valType byte) (memstore.DictDataStore, error) {
-	
-
+func CoerceDict(byteData []byte) (memstore.DictDataStore, error) {
 	output := memstore.DictDataStore{}
+	trimmed := bytes.Trim(byteData, "\x00")
 
-	switch keyType {
-	case enums.DATATYPE_BYTE_INT:
-		data = val.(map[int]interface{})
-		output.KeyType = enums.DATATYPE_BYTE_INT
-		switch valType {
-		case enums.DATATYPE_BYTE_BOOL:
-			output.ValType = enums.DATATYPE_BYTE_BOOL
+	var data map[string]interface{}
+	err := json.Unmarshal(trimmed, &data)
 
-			var val map[bool]bool
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.IntBoolData = val.(map[int]bool)
-		case enums.DATATYPE_BYTE_INT:
-			output.ValType = enums.DATATYPE_BYTE_INT
-
-			var val map[bool]int
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-
-			output.IntIntData = val.(map[int]int)
-		case enums.DATATYPE_BYTE_FLOAT:
-			output.ValType = enums.DATATYPE_BYTE_FLOAT
-
-			var val map[bool]float64
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-
-			output.IntFloatData = val.(map[int]float64)
-		case enums.DATATYPE_BYTE_STRING:
-			output.ValType = enums.DATATYPE_BYTE_STRING
-
-			var val map[bool]string
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-
-			output.IntStringData = val.(map[int]string)
-		case enums.DATATYPE_BYTE_DICT:
-			output.ValType = enums.DATATYPE_BYTE_DICT
-	
-			var val map[bool]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.IntDictData = val.(map[int]memstore.DictDataStore)
-		case enums.DATATYPE_BYTE_LIST:
-			ouptut.ValType = enums.DATATYPE_BYTE_LIST
-	
-			var val map[bool]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.IntListData = val.(map[int]memstore.ListDataStore)
-		}
-	case enums.DATATYPE_BYTE_FLOAT:
-		output.KeyType = enums.DATATYPE_BYTE_FLOAT
-		switch valType {
-		case enums.DATATYPE_BYTE_BOOL:
-			output.ValType = enums.DATATYPE_BYTE_BOOL
-
-			var val map[float64]bool
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatBoolData = val.(map[float64]bool)
-		case enums.DATATYPE_BYTE_INT:
-			output.ValType = enums.DATATYPE_BYTE_INT
-	
-			var val map[float64]int
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatIntData = val.(map[float64]int)
-		case enums.DATATYPE_BYTE_FLOAT:
-			output.ValType = enums.DATATYPE_BYTE_FLOAT
-
-			var val map[float64]float64
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatFloatData = val.(map[float64]float64)
-		case enums.DATATYPE_BYTE_STRING:
-			output.ValType = enums.DATATYPE_BYTE_STRING
-	
-			var val map[float64]string
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatStringData = val.(map[float64]string)
-		case enums.DATATYPE_BYTE_DICT:
-			output.ValType = enums.DATATYPE_BYTE_DICT
-	
-			var val map[float64]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatDictData = val.(map[float64]memstore.DictDataStore)
-		case enums.DATATYPE_BYTE_LIST:
-			ouptut.ValType = enums.DATATYPE_BYTE_LIST
-	
-			var val map[float64]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.FloatListData = val.(map[float64]memstore.ListDataStore)
-		}
-	case enums.DATATYPE_BYTE_STRING:
-		output.KeyType = enums.DATATYPE_BYTE_STRING
-		data = val.(map[string]interface{})
-		switch valType {
-		case enums.DATATYPE_BYTE_BOOL:
-			output.ValType = enums.DATATYPE_BYTE_BOOL
-	
-			var val map[string]bool
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringBoolData = val.(map[string]bool)
-		case enums.DATATYPE_BYTE_INT:
-			output.ValType = enums.DATATYPE_BYTE_INT
-
-			var val map[string]int
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringIntData = val.(map[string]int)
-		case enums.DATATYPE_BYTE_FLOAT:
-			output.ValType = enums.DATATYPE_BYTE_FLOAT
-	
-			var val map[string]float64
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringFloatData = val.(map[string]float64)
-		case enums.DATATYPE_BYTE_STRING:
-			output.ValType = enums.DATATYPE_BYTE_STRING
-	
-			var val map[string]string
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringStringData = val.(map[string]string)
-		case enums.DATATYPE_BYTE_DICT:
-			output.ValType = enums.DATATYPE_BYTE_DICT
-
-			var val map[string]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringDictData = val.(map[string]memstore.DictDataStore)
-		case enums.DATATYPE_BYTE_LIST:
-			ouptut.ValType = enums.DATATYPE_BYTE_LIST
-	
-			var val map[string}]interface{}
-			err := json.Unmarshal(data, &val)
-
-			if err != nil {
-				return memstore.DictDataStore{}, err
-			}
-
-			output.StringListData = val.(map[string]memstore.ListDataStore)
-		}
+	if err != nil {
+		return memstore.DictDataStore{}, err
 	}
+
+	output = CoerceDictInterface(data)
+
 	return output, nil
 }
 
-func CoerceList(data []byte, valType byte) (memstore.ListDataStore, error) {
-	var val map[interface{}]interface{}
-	err := json.Unmarshal(data, &val)
+func CoerceList(byteData []byte) (memstore.ListDataStore, error) {
+	output := memstore.ListDataStore{}
+	trimmed := bytes.Trim(byteData, "\x00")
+
+	var data []interface{}
+	err := json.Unmarshal(trimmed, &data)
+
 	if err != nil {
 		return memstore.ListDataStore{}, err
 	}
 
-	output := memstore.ListDataStore{}
+	output = CoerceListInterface(data)
 
-	switch valType {
-	case enums.DATATYPE_BYTE_BOOL:
-		output.ValType = enums.DATATYPE_BYTE_BOOL
-		output.BoolData = val.([]bool)
-	case enums.DATATYPE_BYTE_INT:
-		output.ValType = enums.DATATYPE_BYTE_INT
-		output.IntData = val.([]int)
-	case enums.DATATYPE_BYTE_FLOAT:
-		output.ValType = enums.DATATYPE_BYTE_FLOAT
-		output.FloatData = val.([]float64)
-	case enums.DATATYPE_BYTE_STRING:
-		output.ValType = enums.DATATYPE_BYTE_STRING
-		output.StringData = val.([]string)
-	case enums.DATATYPE_BYTE_DICT:
-		output.ValType = enums.DATATYPE_BYTE_DICT
-		output.DictData = val.([]memstore.DictDataStore)
-	case enums.DATATYPE_BYTE_LIST:
-		ouptut.ValType = enums.DATATYPE_BYTE_LIST
-		output.ListData = val.([]memstore.ListDataStore)
-	}
 	return output, nil
+}
+func CoerceDictInterface(data map[string]interface{}) memstore.DictDataStore {
+	output := memstore.DictDataStore{}
+	output.Init()
+
+	for key, val := range data {
+		valType := GetDataTypeForInterface(val)
+
+		switch valType {
+		case enums.DATATYPE_BYTE_BOOL:
+			output.BoolData[key] = val.(bool)
+		case enums.DATATYPE_BYTE_INT:
+			output.IntData[key] = val.(int)
+		case enums.DATATYPE_BYTE_FLOAT:
+			output.FloatData[key] = val.(float64)
+		case enums.DATATYPE_BYTE_STRING:
+			output.StringData[key] = val.(string)
+		case enums.DATATYPE_BYTE_DICT:
+			output.DictData[key] = CoerceDictInterface(val.(map[string]interface{}))
+		case enums.DATATYPE_BYTE_LIST:
+			output.ListData[key] = CoerceListInterface(val.([]interface{}))
+		}
+	}
+
+	return output
+}
+
+func CoerceListInterface(data []interface{}) memstore.ListDataStore {
+	output := memstore.ListDataStore{}
+	output.Init()
+
+	for idx, val := range data {
+		valType := GetDataTypeForInterface(val)
+
+		switch valType {
+		case enums.DATATYPE_BYTE_BOOL:
+			output.BoolData[idx] = val.(bool)
+		case enums.DATATYPE_BYTE_INT:
+			output.IntData[idx] = val.(int)
+		case enums.DATATYPE_BYTE_FLOAT:
+			output.FloatData[idx] = val.(float64)
+		case enums.DATATYPE_BYTE_STRING:
+			output.StringData[idx] = val.(string)
+		case enums.DATATYPE_BYTE_DICT:
+			output.DictData[idx] = CoerceDictInterface(val.(map[string]interface{}))
+		case enums.DATATYPE_BYTE_LIST:
+			coercedVal, _ := val.([]interface{})
+			output.ListData[idx] = CoerceListInterface(coercedVal)
+		}
+	}
+
+	return output
 }
 
 func GetVariableDataType(name string, vars *memstore.VariableStore) byte {
@@ -418,4 +246,94 @@ func GetVariableContext(key string, dataType byte, vars *memstore.VariableStore)
 		return tempStore
 	}
 	return baseStore
+}
+
+func GetDataTypeForInterface(val interface{}) byte {
+	if _, ok := val.(string); ok {
+		return enums.DATATYPE_BYTE_STRING
+	}
+
+	if _, ok := val.(float64); ok {
+		return enums.DATATYPE_BYTE_FLOAT
+	}
+
+	if _, ok := val.(int); ok {
+		return enums.DATATYPE_BYTE_INT
+	}
+
+	if _, ok := val.(bool); ok {
+		return enums.DATATYPE_BYTE_BOOL
+	}
+
+	if _, ok := val.([]interface{}); ok {
+		return enums.DATATYPE_BYTE_LIST
+	}
+
+	return enums.DATATYPE_BYTE_DICT
+}
+
+func FindVariableType(name string, vars *memstore.VariableStore) (byte, error) {
+	tempStore := vars
+
+	for tempStore != nil {
+		if _, ok := vars.BoolData[name]; ok {
+			return enums.DATATYPE_BYTE_BOOL, nil
+		}
+		if _, ok := vars.IntData[name]; ok {
+			return enums.DATATYPE_BYTE_INT, nil
+		}
+		if _, ok := vars.FloatData[name]; ok {
+			return enums.DATATYPE_BYTE_FLOAT, nil
+		}
+		if _, ok := vars.StringData[name]; ok {
+			return enums.DATATYPE_BYTE_STRING, nil
+		}
+		if _, ok := vars.DictData[name]; ok {
+			return enums.DATATYPE_BYTE_DICT, nil
+		}
+		if _, ok := vars.ListData[name]; ok {
+			return enums.DATATYPE_BYTE_LIST, nil
+		}
+		tempStore = tempStore.Parent
+	}
+
+	return byte(0), fmt.Errorf("variable %s does not exist", name)
+}
+
+func FindDictVariableType(name string, dict memstore.DictDataStore) byte {
+	if _, ok := dict.BoolData[name]; ok {
+		return enums.DATATYPE_BYTE_BOOL
+	}
+	if _, ok := dict.IntData[name]; ok {
+		return enums.DATATYPE_BYTE_INT
+	}
+	if _, ok := dict.FloatData[name]; ok {
+		return enums.DATATYPE_BYTE_FLOAT
+	}
+	if _, ok := dict.StringData[name]; ok {
+		return enums.DATATYPE_BYTE_STRING
+	}
+	if _, ok := dict.DictData[name]; ok {
+		return enums.DATATYPE_BYTE_DICT
+	}
+	return enums.DATATYPE_BYTE_LIST
+}
+
+func FindListVariableType(idx int, list memstore.ListDataStore) byte {
+	if _, ok := list.BoolData[idx]; ok {
+		return enums.DATATYPE_BYTE_BOOL
+	}
+	if _, ok := list.IntData[idx]; ok {
+		return enums.DATATYPE_BYTE_INT
+	}
+	if _, ok := list.FloatData[idx]; ok {
+		return enums.DATATYPE_BYTE_FLOAT
+	}
+	if _, ok := list.StringData[idx]; ok {
+		return enums.DATATYPE_BYTE_STRING
+	}
+	if _, ok := list.DictData[idx]; ok {
+		return enums.DATATYPE_BYTE_DICT
+	}
+	return enums.DATATYPE_BYTE_LIST
 }

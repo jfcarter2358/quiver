@@ -78,30 +78,18 @@ func ParseBlockData(byteCode []byte, vars *memstore.VariableStore) ([]byte, erro
 				vars.StringData[source] = data
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 			case enums.DATATYPE_BYTE_DICT:
-
-				keyType := byteCode[0]
-				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
-
-				valType := byteCode[0]
-				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
-
-				data, err := utils.CoerceDict(byteCode[:dataLength], keyType, valType)
+				data, err := utils.CoerceDict(byteCode[:dataLength])
 				if err != nil {
 					return nil, err
 				}
 				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
-
 				vars.DictData[source] = data
-
 			case enums.DATATYPE_BYTE_LIST:
-				valType := byteCode[0]
-				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, 1)
-
-				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
-				data, err := utils.CoerceList(byteCode[:dataLength], valType)
+				data, err := utils.CoerceList(byteCode[:dataLength])
 				if err != nil {
 					return nil, err
 				}
+				byteCode, byteCounter = advanceByteCode(byteCode, byteCounter, dataLength)
 				vars.ListData[source] = data
 			}
 
@@ -179,6 +167,16 @@ func ParseInstructions(byteCode []byte) []Instruction {
 			byteCode, instruction = parseGoto(byteCode)
 		case enums.OP_CODE_BYTE_STOP:
 			byteCode, instruction = parseStop(byteCode)
+		case enums.OP_CODE_BYTE_COPY:
+			byteCode, instruction = parseCopy(byteCode)
+		case enums.OP_CODE_BYTE_DICT_ACCESS:
+			byteCode, instruction = parseDictAccess(byteCode)
+		case enums.OP_CODE_BYTE_DICT_ASSIGN:
+			byteCode, instruction = parseDictAssign(byteCode)
+		case enums.OP_CODE_BYTE_LIST_ACCESS:
+			byteCode, instruction = parseListAccess(byteCode)
+		case enums.OP_CODE_BYTE_LIST_ASSIGN:
+			byteCode, instruction = parseListAssign(byteCode)
 		}
 		instructions = append(instructions, instruction)
 	}
@@ -374,6 +372,46 @@ func parseStop(byteCode []byte) ([]byte, Instruction) {
 	byteCode, instruction := getArg1(byteCode)
 
 	instruction.OpCode = enums.OP_CODE_BYTE_STOP
+
+	return byteCode, instruction
+}
+
+func parseCopy(byteCode []byte) ([]byte, Instruction) {
+	byteCode, instruction := getArg2(byteCode)
+
+	instruction.OpCode = enums.OP_CODE_BYTE_COPY
+
+	return byteCode, instruction
+}
+
+func parseDictAssign(byteCode []byte) ([]byte, Instruction) {
+	byteCode, instruction := getArg3(byteCode)
+
+	instruction.OpCode = enums.OP_CODE_BYTE_DICT_ASSIGN
+
+	return byteCode, instruction
+}
+
+func parseDictAccess(byteCode []byte) ([]byte, Instruction) {
+	byteCode, instruction := getArg3(byteCode)
+
+	instruction.OpCode = enums.OP_CODE_BYTE_DICT_ACCESS
+
+	return byteCode, instruction
+}
+
+func parseListAssign(byteCode []byte) ([]byte, Instruction) {
+	byteCode, instruction := getArg3(byteCode)
+
+	instruction.OpCode = enums.OP_CODE_BYTE_LIST_ASSIGN
+
+	return byteCode, instruction
+}
+
+func parseListAccess(byteCode []byte) ([]byte, Instruction) {
+	byteCode, instruction := getArg3(byteCode)
+
+	instruction.OpCode = enums.OP_CODE_BYTE_LIST_ACCESS
 
 	return byteCode, instruction
 }
