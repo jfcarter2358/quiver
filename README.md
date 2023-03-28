@@ -40,9 +40,10 @@ A programming language designed to merge the ease of writing with Python with th
 
 **QUIVER-6 :: Datatype improvements**
 
-- [ ] Cast to differnt datatype
+- [ ] Cast to different datatype
 - [ ] Byte datatype
-- [ ] Remove int/float combo operations
+- [ ] Any datatype
+- [ ] Type assertion
 
 **~~QUIVER-7 :: Variable management~~**
 
@@ -67,7 +68,7 @@ A programming language designed to merge the ease of writing with Python with th
 
 - [ ] Break out operations into type specific to remove type checking statements
 
-**QUIVER_12 :: Dictionaries and lists**
+**~~QUIVER_12 :: Dictionaries and lists~~**
 
-- [ ] Implement dictionary datatype
-- [ ] Implement list datatype
+- [x] Implement dictionary datatype
+- [x] Implement list datatype

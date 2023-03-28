@@ -119,10 +119,31 @@
       [op code][return code]
       [ 1     ][ 1         ]
       ```
-- `SOCKET OPEN ?` **NOT IMPLEMENTED**
-- `SOCKET CLOSE ?` **NOT IMPLEMENTED**
-- `JUMP_RETURN ?` **NOT IMPLEMENTED**
-- `JUMP_BACK ?` **NOT IMPLEMENTED**
+- `COPY <source> <dest>`
+    - ```
+      [op code][source length][source][dest length][dest]
+      [ 1     ][ 1           ][ ?    ][ 1         ][ ?  ]
+      ```
+- `DICT_ACCESS <dict> <key> <storage>`
+    - ```
+      [op code][dict length][dict][key length][key][dest length][dest]
+      [ 1     ][ 1         ][ ?  ][ 1        ][ ? ][ 1         ][ ?  ]
+      ```
+- `DICT_ASSIGN <source> <key> <dict>`
+    - ```
+      [op code][source length][source][key length][key][dict length][dict]
+      [ 1     ][ 1           ][ ?    ][ 1        ][ ? ][ 1         ][ ?  ]
+      ```
+- `LIST_ACCESS <list> <key> <storage>`
+    - ```
+      [op code][list length][dict][key length][key][dest length][dest]
+      [ 1     ][ 1         ][ ?  ][ 1        ][ ? ][ 1         ][ ?  ]
+      ```
+- `LIST_ASSIGN <source> <key> <list>`
+    - ```
+      [op code][source length][source][key length][key][list length][list]
+      [ 1     ][ 1           ][ ?    ][ 1        ][ ? ][ 1         ][ ?  ]
+      ```
 
 # Dot codes
 
