@@ -6,53 +6,67 @@ import (
 )
 
 type VariableStore struct {
-	LabelData      map[string]int
-	BoolData       map[string]bool
-	IntData        map[string]int
-	FloatData      map[string]float64
-	StringData     map[string]string
-	ListData       map[string][]DepthDataStore
-	ListType       map[string]byte
-	BoolDictData   map[string]map[bool]DepthDataStore
-	IntDictData    map[string]map[int]DepthDataStore
-	FloatDictData  map[string]map[float64]DepthDataStore
-	StringDictData map[string]map[string]DepthDataStore
-	DictTypes      map[string]byte
-	FuncData       map[string]map[string]byte
-	PostalData     map[string]map[string]string
-	SocketData     map[string]net.Conn
-	Parent         *VariableStore
+	LabelData  map[string]int
+	BoolData   map[string]bool
+	IntData    map[string]int
+	FloatData  map[string]float64
+	StringData map[string]string
+	ListData   map[string]ListDataStore
+	DictData   map[string]DictDataStore
+	FuncData   map[string]map[string]byte
+	PostalData map[string]map[string]string
+	SocketData map[string]net.Conn
+	Parent     *VariableStore
 }
 
-type DepthDataStore struct {
-	BoolData   bool
-	IntData    int
-	FloatData  float64
-	StringData string
-	DictData   string
-	ListData   string
+type ListDataStore struct {
+	ValType    byte
+	BoolData   []bool
+	IntData    []int
+	FloatData  []float64
+	StringData []string
+	DictData   []DictDataStore
+	ListData   []ListDataStore
+}
+
+type DictDataStore struct {
+	KeyType          byte
+	ValType          byte
+	IntBoolData      map[int]bool
+	IntIntData       map[int]int
+	IntFloatData     map[int]float64
+	IntStringData    map[int]string
+	IntDictData      map[int]DictDataStore
+	IntListData      map[int]ListDataStore
+	FloatBoolData    map[float64]bool
+	FloatIntData     map[float64]int
+	FloatFloatData   map[float64]float64
+	FloatStringData  map[float64]string
+	FloatDictData    map[float64]DictDataStore
+	FloatListData    map[float64]ListDataStore
+	StringBoolData   map[string]bool
+	StringIntData    map[string]int
+	StringFloatData  map[string]float64
+	StringStringData map[string]string
+	StringDictData   map[string]DictDataStore
+	StringListData   map[string]ListDataStore
 }
 
 var Vars VariableStore
 
 func Init() {
 	Vars = VariableStore{
-		LabelData:      map[string]int{},
-		BoolData:       map[string]bool{},
-		IntData:        map[string]int{},
-		FloatData:      map[string]float64{},
-		StringData:     map[string]string{},
-		ListData:       map[string][]DepthDataStore{},
-		ListType:       map[string]byte{},
-		BoolDictData:   map[string]map[bool]DepthDataStore{}
-		IntDictData:    map[string]map[int]DepthDataStore{},
-		FloatDictData:  map[string]map[float64]DepthDataStore{},
-		StringDictData: map[string]map[string]DepthDataStore{},
-		DictTypes:      map[string]map[string]byte{},
-		FuncData:       map[string]map[string]byte{},
-		PostalData:     map[string]map[string]string{},
-		SocketData:     map[string]net.Conn{},
-		Parent:         nil,
+		LabelData:  map[string]int{},
+		BoolData:   map[string]bool{},
+		IntData:    map[string]int{},
+		FloatData:  map[string]float64{},
+		StringData: map[string]string{},
+		ListData:   map[string]ListDataStore{},
+		DictData:   map[string]DictDataStore{},
+		FuncData:   map[string]map[string]byte{},
+		PostalData: map[string]map[string]string{},
+		SocketData: map[string]net.Conn{},
+		Parent:     nil,
 	}
 }
 
