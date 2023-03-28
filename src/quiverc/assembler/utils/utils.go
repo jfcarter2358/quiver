@@ -32,6 +32,12 @@ func GetDataType(val string) (byte, error) {
 	if strings.HasPrefix(val, "\"") && strings.HasSuffix(val, "\"") {
 		return enums.DATATYPE_BYTE_STRING, nil
 	}
+	if strings.HasPrefix(val, "{") && strings.HasSuffix(val, "}") {
+		return enums.DATATYPE_BYTE_DICT, nil
+	}
+	if strings.HasPrefix(val, "[") && strings.HasSuffix(val, "]") {
+		return enums.DATATYPE_BYTE_LIST, nil
+	}
 	if val == "true" || val == "false" {
 		return enums.DATATYPE_BYTE_BOOL, nil
 	}
